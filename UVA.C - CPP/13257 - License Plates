@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <set>
+#include <iostream>
+
+using namespace std;
+
+vector<int> counter[27];
+
+bool can_create(int i , int j , int k){
+    if(counter[i].empty() || counter[j].empty() || counter[k].empty()) return false;
+    int first_pos = counter[i].front() + 1;
+    int last_pos = counter[k].back() - 1;
+    if(first_pos > last_pos) return false;
+    int can_take_pos = upper_bound(counter[j].begin() , counter[j].end() , last_pos) - lower_bound(counter[j].begin() , counter[j].end() , first_pos);
+    if(can_take_pos > 0)return true;
+    return false;
+}
+
+int main(){
+
+    freopen("/Users/shopup/Documents/demo/input.txt","r",stdin);
+    int t , len , ans ;
+    string str;
+    cin >> t;
+    while (t--){
+        cin >> str;
+        len = str.length();
+        for(int i = 0 ; i < 27 ; ++i) counter[i].clear();
+        for(int i = 0 ; i < len ; ++i){
+            counter[str[i] - 'A'].push_back(i + 1);
+        }
+        ans = 0 ;
+        for(int i = 0 ; i < 26 ; ++i){
+            for(int j = 0 ; j < 26 ; ++j){
+                for(int k = 0 ; k < 26 ; ++k){
+                    if(can_create(i , j , k)) ++ans;
+                }
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}
